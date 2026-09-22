@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.Nikola.ECommerce.Repository.CategoryRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
 import com.Nikola.ECommerce.Requests.CreateProductRequest;
+import com.Nikola.ECommerce.Services.ProductService;
 import com.Nikola.ECommerce.model.Product;
 
 import jakarta.validation.Valid;
@@ -23,67 +24,46 @@ public class ProductController {
 
 	
 	@Autowired
-	ProductRepository repo;
-	
-	@Autowired
-	CategoryRepository catrepo;
+	ProductService service;
 	
 	
 	@GetMapping("/products")
 	public List<Product> getUsers()
 	{
-		return repo.findAll();
+		return service.getUsers();
 	}
 	
 	@GetMapping("/products/{id}")
 	public Product getUsers(@PathVariable("id")int id)
 	{
-		return repo.findById(id).orElseThrow();
+		return service.getUsers(id);
 	}
 	
 	@PostMapping("products")
 	public Product addUser(@Valid @RequestBody CreateProductRequest userrequ)
 	{
-		Product product = new Product();
-		product.setName(userrequ.getName());
-		product.setText(userrequ.getText());
-		product.setPrice(userrequ.getPrice());
-		product.setStock(userrequ.getStock());
-		product.setCategory(catrepo.findById(userrequ.getCategoryID()).orElseThrow());
+	
 		
-		repo.save(product);
-		
-		return product;
+		return service.addUser(userrequ);
 	}
 	
 	@PutMapping("products/{id}")
 	public Product updateUser(@PathVariable("id")int id, @RequestBody Product userrequ )
 	{
-		Product product = repo.findById(id).orElseThrow();
-		
-		if(userrequ.getName()!= null)
-		product.setName(userrequ.getName());
-		if(userrequ.getText()!= null)
-		product.setText(userrequ.getText());
-		if(userrequ.getPrice()!= 0)
-		product.setPrice(userrequ.getPrice());
-		if(userrequ.getStock()!= 0)
-		product.setStock(userrequ.getStock());
 		
 		
 		
-		return product;
+		
+		return service.updateUser(id, userrequ);
 		
 	}
 	
 	@DeleteMapping("/products/{id}")
 	public Product deleteUser(@PathVariable("id") int id)
 	{
-		Product category = repo.findById(id).orElseThrow();
 		
-		repo.deleteById(id);
 		
-		return category;
+		return service.deleteUser(id);
 	}
 	
 }

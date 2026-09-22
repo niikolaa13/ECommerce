@@ -15,6 +15,7 @@ import com.Nikola.ECommerce.Repository.CategoryRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
 import com.Nikola.ECommerce.Requests.CreateCategoryRequest;
 import com.Nikola.ECommerce.Requests.CreateUserRequest;
+import com.Nikola.ECommerce.Services.CategoryService;
 import com.Nikola.ECommerce.model.Category;
 import com.Nikola.ECommerce.model.User;
 
@@ -24,51 +25,38 @@ import jakarta.validation.Valid;
 public class CategoryController {
 
 	@Autowired
-	CategoryRepository repo;
+	CategoryService service;
 	
 	
 	@GetMapping("/categories")
 	public List<Category> getUsers()
 	{
-		return repo.findAll();
+		return service.getUsers();
 	}
 	
 	@GetMapping("/categories/{id}")
 	public Category getUsers(@PathVariable("id")int id)
 	{
-		return repo.findById(id).orElseThrow();
+		return service.getUsers(id);
 	}
 	
 	@PostMapping("categories")
 	public Category addUser(@Valid @RequestBody CreateCategoryRequest userrequ)
 	{
-		Category category = new Category();
-		category.setName(userrequ.getName());
-		
-		repo.save(category);
-		
-		return category;
+		return service.addUser(userrequ);
 	}
 	
 	@PutMapping("categories/{id}")
 	public Category updateUser(@PathVariable("id")int id, @RequestBody Category user1 )
 	{
-		Category category = repo.findById(id).orElseThrow();
-		
-		category.setName(user1.getName());
-		
-		return category;
+		return service.updateUser(id, user1);
 		
 	}
 	
 	@DeleteMapping("/categories/{id}")
 	public Category deleteUser(@PathVariable("id") int id)
 	{
-		Category category = repo.findById(id).orElseThrow();
-		
-		repo.deleteById(id);
-		
-		return category;
+		return service.deleteUser(id);
 	}
 	
 }
