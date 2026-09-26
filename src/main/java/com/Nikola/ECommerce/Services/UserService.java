@@ -2,18 +2,28 @@ package com.Nikola.ECommerce.Services;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.Nikola.ECommerce.DTO.CreateUserRequest;
 import com.Nikola.ECommerce.Repository.UserRepository;
-import com.Nikola.ECommerce.Requests.CreateUserRequest;
 import com.Nikola.ECommerce.model.User;
 
 @Service
 public class UserService {
 
+	private final PasswordEncoder passwordEncoder;
 	@Autowired
 	UserRepository repo;
+
+
+
+	UserService(PasswordEncoder passwordEncoder) {
+		this.passwordEncoder = passwordEncoder;
+	}
 	
 	
 	
@@ -31,11 +41,16 @@ public class UserService {
 	
 	public User addUser( CreateUserRequest userrequ)
 	{
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+			
+	
+		
+		String lozinka = passwordEncoder.encode(userrequ.getPassword());
 		User user = new User();
 		user.setIme(userrequ.getIme());
 		user.setPrezime(userrequ.getPrezime());
 		user.setEmail(userrequ.getEmail());
-		user.setPassword(userrequ.getPassword());
+		user.setPassword(lozinka);
 		user.setRole(userrequ.getRole());
 		
 		repo.save(user);

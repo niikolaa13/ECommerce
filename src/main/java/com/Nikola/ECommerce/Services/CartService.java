@@ -1,18 +1,23 @@
 package com.Nikola.ECommerce.Services;
 
+import java.net.Authenticator;
 import java.util.List;
 
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.Nikola.ECommerce.DTO.CreateCart_ItemRequest;
+import com.Nikola.ECommerce.DTO.UpdateQuantity;
 import com.Nikola.ECommerce.Repository.CartRepository;
 import com.Nikola.ECommerce.Repository.Cart_itemRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
 import com.Nikola.ECommerce.Repository.UserRepository;
-import com.Nikola.ECommerce.Requests.CreateCart_ItemRequest;
-import com.Nikola.ECommerce.Requests.UpdateQuantity;
 import com.Nikola.ECommerce.model.Cart;
 import com.Nikola.ECommerce.model.Cart_item;
 import com.Nikola.ECommerce.model.Product;
@@ -36,6 +41,17 @@ public class CartService {
 	@Transactional
 	public List<Cart_item> getCart(int id)
 	{	
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userrepo.findByEmail(email).getId()!= id) {
+			throw new ResponseStatusException(
+			        HttpStatus.FORBIDDEN,
+			        "Nemate pristup ovim porudžbinama");
+		}
+		
+		
 		Cart cart;
 		if(repo.findByUser_id(id)==null) {
 			 cart = new Cart();
@@ -53,6 +69,15 @@ public class CartService {
 	
 	public Cart_item addInCart( CreateCart_ItemRequest cartItem,int id)
 	{
+		
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userrepo.findByEmail(email).getId()!= id) {
+			throw new ResponseStatusException(
+			        HttpStatus.FORBIDDEN,
+			        "Nemate pristup ovim porudžbinama");
+		}
 		
 		Cart cart;
 		if(repo.findByUser_id(id)==null) {
@@ -100,6 +125,15 @@ public class CartService {
 	public Cart_item azurirajKorpu( int userId, int itemId, UpdateQuantity quantity)
 	{
 		
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userrepo.findByEmail(email).getId()!= userId) {
+			throw new ResponseStatusException(
+			        HttpStatus.FORBIDDEN,
+			        "Nemate pristup ovim porudžbinama");
+		}
+		
 		Cart_item item = itemrepo.findByProduct_idAndCart_id(itemId, userId);
 		if(item == null) {
 			throw new ExecutionException("ne postoji ta stvar u korpi");
@@ -115,6 +149,17 @@ public class CartService {
 	
 	public void obrisiItemUKorpi(int userId,int itemId, UpdateQuantity quantity)
 	{
+		
+	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userrepo.findByEmail(email).getId()!= userId) {
+			throw new ResponseStatusException(
+			        HttpStatus.FORBIDDEN,
+			        "Nemate pristup ovim porudžbinama");
+		}
+		
+		
 		
 		Cart_item item = itemrepo.findByProduct_idAndCart_id(itemId, userId);
 		if(item == null) {

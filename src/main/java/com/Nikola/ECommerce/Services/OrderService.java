@@ -3,10 +3,15 @@ package com.Nikola.ECommerce.Services;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.Nikola.ECommerce.Repository.CartRepository;
 import com.Nikola.ECommerce.Repository.Cart_itemRepository;
@@ -45,6 +50,15 @@ public class OrderService {
 	
 	@Transactional
 	public Orders addOrder(int userId) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userRepo.findByEmail(email).getId()!= userId) {
+			throw new ResponseStatusException(
+			        HttpStatus.FORBIDDEN,
+			        "You are not allowed to access to other users carts");
+		}
 
 	    User user = userRepo.findById(userId).orElseThrow();
 
@@ -121,12 +135,26 @@ public class OrderService {
 	
 	
 	public List<Orders> getAllOrders() {
+		
+
+		
 	    return repo.findAll();
 	}
 	
 	
 	public List<Orders> getOrdersByUser(@PathVariable("userId")int userId)
 	{
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		String email = authentication.getName();
+		if(userRepo.findByEmail(email).getId()!= userId) {
+			throw new ResponseStatusException(
+					HttpStatus.FORBIDDEN,
+					"You are not allowed to access to other users carts"
+					);
+		}
+		
 		
 		return repo.findAllByUser_id(userId);
 		

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Nikola.ECommerce.DTO.CreateUserRequest;
 import com.Nikola.ECommerce.Repository.UserRepository;
-import com.Nikola.ECommerce.Requests.CreateUserRequest;
 import com.Nikola.ECommerce.Services.UserService;
 import com.Nikola.ECommerce.model.User;
 

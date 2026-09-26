@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce.Requests;
+package com.Nikola.ECommerce.DTO;
 
 import jakarta.validation.constraints.NotNull;
 

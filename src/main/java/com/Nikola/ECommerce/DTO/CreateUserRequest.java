@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce.Requests;
+package com.Nikola.ECommerce.DTO;
 
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
@@ -18,7 +18,6 @@ public class CreateUserRequest {
 	private String email;
 	@Size(min = 8)
 	private String password;
-	@NotNull
 	private String role;
 	public int getId() {
 		return id;

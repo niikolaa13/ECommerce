@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Nikola.ECommerce.DTO.CreateCategoryRequest;
+import com.Nikola.ECommerce.DTO.CreateUserRequest;
 import com.Nikola.ECommerce.Repository.CategoryRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
-import com.Nikola.ECommerce.Requests.CreateCategoryRequest;
-import com.Nikola.ECommerce.Requests.CreateUserRequest;
 import com.Nikola.ECommerce.Services.CategoryService;
 import com.Nikola.ECommerce.model.Category;
 import com.Nikola.ECommerce.model.User;

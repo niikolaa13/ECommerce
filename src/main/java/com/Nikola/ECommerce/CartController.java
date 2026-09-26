@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.Nikola.ECommerce.DTO.CreateCart_ItemRequest;
+import com.Nikola.ECommerce.DTO.UpdateQuantity;
 import com.Nikola.ECommerce.Repository.CartRepository;
 import com.Nikola.ECommerce.Repository.Cart_itemRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
 import com.Nikola.ECommerce.Repository.UserRepository;
-import com.Nikola.ECommerce.Requests.CreateCart_ItemRequest;
-import com.Nikola.ECommerce.Requests.UpdateQuantity;
 import com.Nikola.ECommerce.Services.CartService;
 import com.Nikola.ECommerce.model.Cart;
 import com.Nikola.ECommerce.model.Cart_item;

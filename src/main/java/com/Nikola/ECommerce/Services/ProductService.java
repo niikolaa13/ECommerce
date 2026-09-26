@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.Nikola.ECommerce.DTO.CreateProductRequest;
 import com.Nikola.ECommerce.Repository.CategoryRepository;
 import com.Nikola.ECommerce.Repository.ProductRepository;
-import com.Nikola.ECommerce.Requests.CreateProductRequest;
 import com.Nikola.ECommerce.model.Product;
 
 @Service
@@ -61,6 +61,8 @@ public class ProductService {
 		product.setPrice(userrequ.getPrice());
 		if(userrequ.getStock()!= 0)
 		product.setStock(userrequ.getStock());
+		
+		repo.save(product);
 		
 		
 		
