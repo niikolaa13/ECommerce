@@ -16,13 +16,13 @@ import com.Nikola.ECommerce.model.User;
 public class UserService {
 
 	private final PasswordEncoder passwordEncoder;
-	@Autowired
-	UserRepository repo;
+	private final UserRepository repo;
 
 
 
-	UserService(PasswordEncoder passwordEncoder) {
+	public UserService(PasswordEncoder passwordEncoder,UserRepository repo) {
 		this.passwordEncoder = passwordEncoder;
+		this.repo = repo;
 	}
 	
 	
@@ -41,7 +41,7 @@ public class UserService {
 	
 	public User addUser( CreateUserRequest userrequ)
 	{
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		
 			
 	
 		

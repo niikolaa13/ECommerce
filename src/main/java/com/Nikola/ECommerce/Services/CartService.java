@@ -26,17 +26,19 @@ import com.Nikola.ECommerce.model.Product;
 public class CartService {
 
 	
-	@Autowired
-	CartRepository repo;
+
+	private final CartRepository repo;
+	private final Cart_itemRepository itemrepo;
+	private final UserRepository userrepo;
+	private final ProductRepository prodrepo;
 	
-	@Autowired 
-	Cart_itemRepository itemrepo;
-	
-	@Autowired
-	UserRepository userrepo;
-	
-	@Autowired
-	ProductRepository prodrepo;
+	public CartService(CartRepository repo,Cart_itemRepository itemrepo,UserRepository userrepo,ProductRepository prodrepo)
+	{
+		this.repo = repo;
+		this.itemrepo = itemrepo;
+		this.userrepo = userrepo;
+		this.prodrepo = prodrepo;
+	}
 	
 	@Transactional
 	public List<Cart_item> getCart(int id)

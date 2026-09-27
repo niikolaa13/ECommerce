@@ -1,6 +1,5 @@
 package com.Nikola.ECommerce.Config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,9 +25,14 @@ import com.Nikola.ECommerce.Security.CustomUserDetailsService;
 public class SecurityConfig {
 	
 	
-	@Autowired
-	CustomUserDetailsService userDetailsService;
+	
+	private final CustomUserDetailsService userDetailsService;
 
+	
+	public SecurityConfig(CustomUserDetailsService userDetailsService)
+	{
+		this.userDetailsService = userDetailsService;
+	}
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception 
@@ -46,7 +49,7 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
 					.requestMatchers(HttpMethod.POST,"/categories/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.PUT,"/categories/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE,"/categories/**").permitAll()
+					.requestMatchers(HttpMethod.DELETE,"/categories/**").hasRole("ADMIN")
 
 					//cart
 					.requestMatchers(HttpMethod.GET,"/users/{userId}/cart").hasRole("USER")

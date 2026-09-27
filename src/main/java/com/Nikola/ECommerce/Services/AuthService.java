@@ -1,11 +1,10 @@
 package com.Nikola.ECommerce.Services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.Nikola.ECommerce.DTO.CreateUserRequest;
 import com.Nikola.ECommerce.DTO.LoginRequest;
@@ -18,18 +17,15 @@ import jakarta.validation.Valid;
 public class AuthService {
 	
 	
-	private final PasswordEncoder passwordEncoder;
+	private final UserRepository repo;
+	private final AuthenticationManager authenticationManager;
+	private final PasswordEncoder enkoder;
 	
-	@Autowired
-	UserRepository repo;
-	
-	@Autowired
-	AuthenticationManager authenticationManager;
-
-
-
-	AuthService(PasswordEncoder passwordEncoder) {
-		this.passwordEncoder = passwordEncoder;
+	public AuthService(UserRepository repo,AuthenticationManager authenticationManager,PasswordEncoder enkoder)
+	{
+		this.repo = repo;
+		this.authenticationManager = authenticationManager;
+		this.enkoder = enkoder;
 	}
 	
 	
@@ -42,7 +38,7 @@ public class AuthService {
 		
 		User user = new User();
 		
-		PasswordEncoder enkoder = new BCryptPasswordEncoder();
+		
 		
 		user.setEmail(userRequest.getEmail());
 		user.setIme(userRequest.getIme());
@@ -57,7 +53,7 @@ public class AuthService {
 
 
 
-	public String login(@Valid LoginRequest loginRequest) throws Exception{
+	public String login( LoginRequest loginRequest) throws Exception{
 		
 		 authenticationManager.authenticate(
 			        new UsernamePasswordAuthenticationToken(

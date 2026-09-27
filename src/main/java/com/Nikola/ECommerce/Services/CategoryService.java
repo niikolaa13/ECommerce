@@ -13,9 +13,13 @@ import com.Nikola.ECommerce.model.Category;
 @Service
 public class CategoryService {
 
-	@Autowired
-	CategoryRepository repo;
 	
+	private final CategoryRepository repo;
+	
+	public CategoryService(CategoryRepository repo)
+	{
+		this.repo = repo;
+	}
 	
 	@GetMapping("/categories")
 	public List<Category> getUsers()

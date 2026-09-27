@@ -14,12 +14,15 @@ import com.Nikola.ECommerce.model.Product;
 public class ProductService {
 
 	
-	@Autowired
-	ProductRepository repo;
+	private final ProductRepository repo;
+	private final CategoryRepository catrepo;
 	
-	@Autowired
-	CategoryRepository catrepo;
 	
+	public ProductService(ProductRepository repo, CategoryRepository catrepo)
+	{
+		this.repo = repo;
+		this.catrepo = catrepo;
+	}
 	
 	
 	public List<Product> getUsers()

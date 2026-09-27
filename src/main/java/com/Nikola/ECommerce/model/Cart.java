@@ -5,10 +5,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Cart {
+public class Cart extends BaseEntity{
 
-	@Id
-	private int id;
+	
 	@OneToOne
 	private User user;
 	
@@ -17,13 +16,7 @@ public class Cart {
 		
 	}
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public User getUser() {
 		return user;

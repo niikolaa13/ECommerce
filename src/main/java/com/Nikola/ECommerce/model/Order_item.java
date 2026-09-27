@@ -7,11 +7,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Order_item {
+public class Order_item extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	
 	@ManyToOne
 	private Orders order;
 	@ManyToOne
@@ -26,14 +24,7 @@ public class Order_item {
 	}
 
 
-	public int getId() {
-		return id;
-	}
 
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 
 	public Orders getOrder() {

@@ -29,23 +29,24 @@ import com.Nikola.ECommerce.model.User;
 public class OrderService {
 
 	
-	@Autowired
-	OrdersRepository repo;
 	
-	@Autowired
-	Order_itemRepository orderItemRepo;
+	private final OrdersRepository repo;
+	private final Order_itemRepository orderItemRepo;
+	private final UserRepository userRepo;
+	private final CartRepository cartRepo;
+	private final Cart_itemRepository cartItemRepo;
+	private final ProductRepository productRepo;
 	
-	@Autowired
-	UserRepository userRepo;
-	
-	@Autowired
-	CartRepository cartRepo;
-	
-	@Autowired
-	Cart_itemRepository cartItemRepo;
-	
-	@Autowired
-	ProductRepository productRepo;
+	public OrderService(OrdersRepository repo,Order_itemRepository orderItemRepo
+			,UserRepository userRepo,CartRepository cartRepo,Cart_itemRepository cartItemRepo,ProductRepository productRepo)
+	{
+		this.repo=repo;
+		this.orderItemRepo=orderItemRepo;
+		this.userRepo = userRepo;
+		this.cartRepo = cartRepo;
+		this.cartItemRepo = cartItemRepo;
+		this.productRepo = productRepo;
+	}
 	
 	
 	@Transactional

@@ -9,11 +9,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Orders {
+public class Orders extends BaseEntity {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	
 	@ManyToOne
 	private User user;
 	private float total_price;
@@ -24,13 +22,7 @@ public class Orders {
 		
 	}
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public User getUser() {
 		return user;
