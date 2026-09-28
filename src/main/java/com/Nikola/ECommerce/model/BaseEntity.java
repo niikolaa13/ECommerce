@@ -16,23 +16,7 @@ public abstract class BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	
-	private LocalDateTime createdAt;
-	
-	private LocalDateTime updatedAt;
-	
-	
-	@PrePersist
-	public void onCreate()
-	{
-		createdAt = LocalDateTime.now();
-		updatedAt = LocalDateTime.now();
-	}
-	
-	@PreUpdate
-	public void onUpdate()
-	{
-		updatedAt = LocalDateTime.now();
-	}
+
 
 	
 	public int getId() {
@@ -43,21 +27,7 @@ public abstract class BaseEntity {
 		this.id = id;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public LocalDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(LocalDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 	
 	
 	

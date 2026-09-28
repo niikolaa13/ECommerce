@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,40 +39,43 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception 
 	{
 		http
-			.csrf(csrf -> csrf.disable())
+			.csrf(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth->auth
-					//users
-					.requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT,"/users/**").hasRole("ADMIN")
 
-					//category
-					.requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
-					.requestMatchers(HttpMethod.POST,"/categories/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT,"/categories/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE,"/categories/**").hasRole("ADMIN")
+							//cart
+							.requestMatchers(HttpMethod.GET,"/users/{userId}/cart").hasRole("USER")
+							.requestMatchers(HttpMethod.POST,"/users/{userId}/cart").hasRole("USER")
+							.requestMatchers(HttpMethod.PUT,"/users/{userId}/cart/items/{itemId}").hasRole("USER")
+							.requestMatchers(HttpMethod.DELETE,"/users/{userId}/cart").hasRole("USER")
 
-					//cart
-					.requestMatchers(HttpMethod.GET,"/users/{userId}/cart").hasRole("USER")
-					.requestMatchers(HttpMethod.POST,"/users/{userId}/cart").hasRole("USER")
-					.requestMatchers(HttpMethod.PUT,"/users/{userId}/cart/items/{itemId}").hasRole("USER")
-					.requestMatchers(HttpMethod.DELETE,"/users/{userId}/cart").hasRole("USER")
-					
-					//orders
-					.requestMatchers(HttpMethod.POST,"/users/{userId}/orders").hasRole("USER")
-					.requestMatchers(HttpMethod.GET,"/orders/{userId}").hasRole("USER")
-					.requestMatchers(HttpMethod.GET,"/orders").hasRole("ADMIN")
+							//users
+							.requestMatchers(HttpMethod.GET,"/users").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT,"/users/**").hasRole("ADMIN")
 
-					//products
-					.requestMatchers(HttpMethod.GET,"/products/**").permitAll()
-					.requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
-		            .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
-		            .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
-		            
-		            //auth
-		            .requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
-		            .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-			.anyRequest().authenticated()
+							//category
+							.requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
+							.requestMatchers(HttpMethod.POST,"/categories/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT,"/categories/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE,"/categories/**").hasRole("ADMIN")
+
+
+
+							//orders
+							.requestMatchers(HttpMethod.POST,"/users/{userId}/orders").hasRole("USER")
+							.requestMatchers(HttpMethod.GET,"/orders/{userId}").hasRole("USER")
+							.requestMatchers(HttpMethod.GET,"/orders").hasRole("ADMIN")
+
+							//products
+							.requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+							.requestMatchers(HttpMethod.POST, "/products/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
+							.requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
+
+							//auth
+							.requestMatchers(HttpMethod.POST,"/auth/register").permitAll()
+							.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+			.anyRequest().permitAll()
 			)
 			.httpBasic(Customizer.withDefaults());
 		
