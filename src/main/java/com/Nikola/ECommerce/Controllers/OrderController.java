@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 

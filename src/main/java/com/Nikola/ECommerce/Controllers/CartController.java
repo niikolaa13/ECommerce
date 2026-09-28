@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
@@ -13,14 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.Nikola.ECommerce.DTO.CreateCart_ItemRequest;
 import com.Nikola.ECommerce.DTO.UpdateQuantity;
-import com.Nikola.ECommerce.Repository.CartRepository;
-import com.Nikola.ECommerce.Repository.Cart_itemRepository;
-import com.Nikola.ECommerce.Repository.ProductRepository;
-import com.Nikola.ECommerce.Repository.UserRepository;
 import com.Nikola.ECommerce.Services.CartService;
-import com.Nikola.ECommerce.model.Cart;
 import com.Nikola.ECommerce.model.Cart_item;
-import com.Nikola.ECommerce.model.Product;
 
 import jakarta.validation.Valid;
 

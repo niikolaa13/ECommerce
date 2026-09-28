@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Nikola.ECommerce.DTO.CreateProductRequest;
-import com.Nikola.ECommerce.Repository.CategoryRepository;
-import com.Nikola.ECommerce.Repository.ProductRepository;
 import com.Nikola.ECommerce.Services.ProductService;
 import com.Nikola.ECommerce.model.Product;
 

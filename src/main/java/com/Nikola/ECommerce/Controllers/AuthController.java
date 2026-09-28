@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
@@ -11,49 +11,46 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Nikola.ECommerce.DTO.CreateUserRequest;
-import com.Nikola.ECommerce.Repository.UserRepository;
-import com.Nikola.ECommerce.Services.UserService;
-import com.Nikola.ECommerce.model.User;
+import com.Nikola.ECommerce.DTO.CreateCategoryRequest;
+import com.Nikola.ECommerce.Services.CategoryService;
+import com.Nikola.ECommerce.model.Category;
 
 import jakarta.validation.Valid;
 
 @RestController
-public class UserController {
+public class CategoryController {
 
-
-	
 	@Autowired
-	UserService service;
+	CategoryService service;
 	
 	
-	@GetMapping("/users")
-	public List<User> getUsers()
+	@GetMapping("/categories")
+	public List<Category> getUsers()
 	{
 		return service.getUsers();
 	}
 	
-	@GetMapping("/users/{id}")
-	public User getUsers(@PathVariable("id")int id)
+	@GetMapping("/categories/{id}")
+	public Category getUsers(@PathVariable("id")int id)
 	{
 		return service.getUsers(id);
 	}
 	
-	@PostMapping("users")
-	public User addUser(@Valid @RequestBody CreateUserRequest userrequ)
+	@PostMapping("categories")
+	public Category addUser(@Valid @RequestBody CreateCategoryRequest userrequ)
 	{
 		return service.addUser(userrequ);
 	}
 	
-	@PutMapping("users/{id}")
-	public User updateUser(@PathVariable("id")int id, @RequestBody User user1 )
+	@PutMapping("categories/{id}")
+	public Category updateUser(@PathVariable("id")int id, @RequestBody Category user1 )
 	{
 		return service.updateUser(id, user1);
 		
 	}
 	
-	@DeleteMapping("/users/{id}")
-	public User deleteUser(@PathVariable("id") int id)
+	@DeleteMapping("/categories/{id}")
+	public Category deleteUser(@PathVariable("id") int id)
 	{
 		return service.deleteUser(id);
 	}

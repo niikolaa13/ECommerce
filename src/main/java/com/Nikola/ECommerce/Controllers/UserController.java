@@ -1,4 +1,4 @@
-package com.Nikola.ECommerce;
+package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
@@ -11,50 +11,48 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Nikola.ECommerce.DTO.CreateCategoryRequest;
 import com.Nikola.ECommerce.DTO.CreateUserRequest;
-import com.Nikola.ECommerce.Repository.CategoryRepository;
-import com.Nikola.ECommerce.Repository.ProductRepository;
-import com.Nikola.ECommerce.Services.CategoryService;
-import com.Nikola.ECommerce.model.Category;
+import com.Nikola.ECommerce.Services.UserService;
 import com.Nikola.ECommerce.model.User;
 
 import jakarta.validation.Valid;
 
 @RestController
-public class CategoryController {
+public class UserController {
 
+
+	
 	@Autowired
-	CategoryService service;
+	UserService service;
 	
 	
-	@GetMapping("/categories")
-	public List<Category> getUsers()
+	@GetMapping("/users")
+	public List<User> getUsers()
 	{
 		return service.getUsers();
 	}
 	
-	@GetMapping("/categories/{id}")
-	public Category getUsers(@PathVariable("id")int id)
+	@GetMapping("/users/{id}")
+	public User getUsers(@PathVariable("id")int id)
 	{
 		return service.getUsers(id);
 	}
 	
-	@PostMapping("categories")
-	public Category addUser(@Valid @RequestBody CreateCategoryRequest userrequ)
+	@PostMapping("users")
+	public User addUser(@Valid @RequestBody CreateUserRequest userrequ)
 	{
 		return service.addUser(userrequ);
 	}
 	
-	@PutMapping("categories/{id}")
-	public Category updateUser(@PathVariable("id")int id, @RequestBody Category user1 )
+	@PutMapping("users/{id}")
+	public User updateUser(@PathVariable("id")int id, @RequestBody User user1 )
 	{
 		return service.updateUser(id, user1);
 		
 	}
 	
-	@DeleteMapping("/categories/{id}")
-	public Category deleteUser(@PathVariable("id") int id)
+	@DeleteMapping("/users/{id}")
+	public User deleteUser(@PathVariable("id") int id)
 	{
 		return service.deleteUser(id);
 	}
