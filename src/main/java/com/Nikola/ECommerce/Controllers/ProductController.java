@@ -2,7 +2,9 @@ package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,25 +31,26 @@ public class ProductController {
 	@GetMapping("/products")
 	public List<Product> getUsers()
 	{
-		return service.getUsers();
+		return service.getProducts();
 	}
 	
 	@GetMapping("/products/{id}")
-	public Product getUsers(@PathVariable("id")int id)
+	public ResponseEntity<Product> getUsers(@PathVariable("id")int id)
 	{
-		return service.getUsers(id);
+
+		return service.getProduct(id);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("products")
-	public Product addUser(@Valid @RequestBody CreateProductRequest userrequ)
+	public Product addUser(@Valid @RequestBody CreateProductRequest userrequ) throws  Exception
 	{
 	
-		return service.addUser(userrequ);
+		return service.addProduct(userrequ);
 	}
 	
 	@PutMapping("products/{id}")
-	public Product updateUser(@PathVariable("id")int id, @RequestBody Product userrequ )
+	public Product updateUser(@PathVariable("id")int id, @RequestBody Product userrequ )throws Exception
 	{
 		
 		
@@ -58,8 +61,7 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/products/{id}")
-	public Product deleteUser(@PathVariable("id") int id)
-	{
+	public Product deleteUser(@PathVariable("id") int id) throws ResourceNotFoundException {
 		
 		
 		return service.deleteUser(id);

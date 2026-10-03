@@ -1,8 +1,14 @@
 package com.Nikola.ECommerce.Services;
 
 import java.util.List;
+import java.util.Optional;
 
+import com.Nikola.ECommerce.Exceptions.ProductNotFoundException;
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.Nikola.ECommerce.DTO.CreateProductRequest;
@@ -25,26 +31,33 @@ public class ProductService {
 	}
 	
 	
-	public List<Product> getUsers()
+	public List<Product> getProducts()
 	{
+
 		return repo.findAll();
 	}
-	
-	
-	public Product getUsers(int id)
-	{
-		return repo.findById(id).orElseThrow();
+
+
+	public ResponseEntity<Product> getProduct(int id) {
+
+
+		Product product = repo.findById(id).orElseThrow(()->
+				new ProductNotFoundException("proizvod sa ID:"+ id +" ne postoji"));
+
+		return ResponseEntity.ok(product);
 	}
 	
 	
-	public Product addUser( CreateProductRequest userrequ)
+	public Product addProduct( CreateProductRequest userrequ) throws  Exception
 	{
 		Product product = new Product();
 		product.setName(userrequ.getName());
 		product.setText(userrequ.getText());
 		product.setPrice(userrequ.getPrice());
 		product.setStock(userrequ.getStock());
-		product.setCategory(catrepo.findById(userrequ.getCategoryID()).orElseThrow());
+		product.setCategory(catrepo.findById(userrequ.getCategoryID()).orElseThrow(
+				()-> new ResourceNotFoundException("Kategorija sa ID:"+ catrepo.findById(userrequ.getCategoryID())+" ne postoji")
+		));
 		
 		repo.save(product);
 		
@@ -52,9 +65,10 @@ public class ProductService {
 	}
 	
 	
-	public Product updateUser(int id,  Product userrequ )
+	public Product updateUser(int id,  Product userrequ )throws  Exception
 	{
-		Product product = repo.findById(id).orElseThrow();
+		Product product = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji produkt sa tim ID-jem"));
 		
 		if(userrequ.getName()!= null)
 		product.setName(userrequ.getName());
@@ -74,9 +88,9 @@ public class ProductService {
 	}
 	
 	
-	public Product deleteUser( int id)
-	{
-		Product category = repo.findById(id).orElseThrow();
+	public Product deleteUser( int id) throws ResourceNotFoundException {
+		Product category = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji produkt sa tim ID-jem"));
 		
 		repo.deleteById(id);
 		

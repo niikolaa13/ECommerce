@@ -3,9 +3,11 @@ package com.Nikola.ECommerce.Services;
 import java.net.Authenticator;
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,8 +43,7 @@ public class CartService {
 	}
 	
 	@Transactional
-	public List<Cart_item> getCart(int id)
-	{	
+	public List<Cart_item> getCart(int id) throws ResourceNotFoundException {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -57,7 +58,10 @@ public class CartService {
 		Cart cart;
 		if(repo.findByUser_id(id)==null) {
 			 cart = new Cart();
-			cart.setUser(userrepo.findById(id).orElseThrow());
+			cart.setUser(userrepo.findById(id).orElseThrow(() ->
+					new ResourceNotFoundException(
+							"Korisnis sa ID: " + id + " ne postoji"
+					)));
 		}
 		else {
 			 cart = repo.findByUser_id(id);
@@ -68,9 +72,8 @@ public class CartService {
 		
 	}
 	
-	
-	public Cart_item addInCart( CreateCart_ItemRequest cartItem,int id)
-	{
+	@Transactional
+	public Cart_item addInCart( CreateCart_ItemRequest cartItem,int id) throws ResourceNotFoundException {
 		
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -84,9 +87,12 @@ public class CartService {
 		Cart cart;
 		if(repo.findByUser_id(id)==null) {
 			cart = new Cart();
-			cart.setUser(userrepo.findById(id).orElseThrow());
+			cart.setUser(userrepo.findById(id).orElseThrow(() ->
+					new ResourceNotFoundException(
+							"Korisnik sa ID " + id + " ne postoji"
+					)));
 			repo.save(cart);
-			repo.flush();
+
 			
 		}
 		else {
@@ -112,20 +118,22 @@ public class CartService {
 		Cart_item items = new Cart_item();
 		
 		items.setCart(cart);
-		Product product = prodrepo.findById(cartItem.getProductID()).orElseThrow();
+		Product product = prodrepo.findById(cartItem.getProductID()).orElseThrow(() ->
+				new ResourceNotFoundException(
+						"Proizvod sa ID " + cartItem.getProductID() + " ne postoji"
+				));
 		items.setProduct(product);
 		items.setQuantity(cartItem.getQuantity());
 		
 		itemrepo.save(items);
 		
-		return items;
+		return items	;
 		
 		
 		
 	}
 	
-	public Cart_item azurirajKorpu( int userId, int itemId, UpdateQuantity quantity)
-	{
+	public Cart_item azurirajKorpu( int userId, int itemId, UpdateQuantity quantity) throws ResourceNotFoundException {
 		
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -138,7 +146,7 @@ public class CartService {
 		
 		Cart_item item = itemrepo.findByProduct_idAndCart_id(itemId, userId);
 		if(item == null) {
-			throw new ExecutionException("ne postoji ta stvar u korpi");
+			throw new ResourceNotFoundException("Stavka korpe sa  ID " + itemId + " ne postoji " );
 		}
 		item.setQuantity(quantity.getQuantity());
 		itemrepo.save(item);
@@ -149,7 +157,7 @@ public class CartService {
 	}
 	
 	
-	public void obrisiItemUKorpi(int userId,int itemId, UpdateQuantity quantity)
+	public void obrisiItemUKorpi(int userId,int itemId, UpdateQuantity quantity) throws ResourceNotFoundException
 	{
 		
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -165,7 +173,9 @@ public class CartService {
 		
 		Cart_item item = itemrepo.findByProduct_idAndCart_id(itemId, userId);
 		if(item == null) {
-			throw new ExecutionException("ne postoji ta stvar u korpi");
+			throw new ResourceNotFoundException(
+							"stavka u korpi	sa ID " + itemId + " ne postoji"
+					);
 		}
 		if(item.getQuantity()-quantity.getQuantity()<=0) {
 			itemrepo.deleteById(item.getId());

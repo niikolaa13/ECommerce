@@ -33,7 +33,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/users/{id}")
-	public User getUsers(@PathVariable("id")int id)
+	public User getUsers(@PathVariable("id")int id)throws 	Exception
 	{
 		return service.getUsers(id);
 	}
@@ -45,14 +45,14 @@ public class UserController {
 	}
 	
 	@PutMapping("users/{id}")
-	public User updateUser(@PathVariable("id")int id, @RequestBody User user1 )
+	public User updateUser(@PathVariable("id")int id, @RequestBody User user1 ) throws Exception
 	{
 		return service.updateUser(id, user1);
 		
 	}
 	
 	@DeleteMapping("/users/{id}")
-	public User deleteUser(@PathVariable("id") int id)
+	public User deleteUser(@PathVariable("id") int id) throws Exception
 	{
 		return service.deleteUser(id);
 	}

@@ -3,6 +3,7 @@ package com.Nikola.ECommerce.Services;
 import java.util.Date;
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.hibernate.sql.exec.ExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,8 @@ public class OrderService {
 	
 	
 	@Transactional
-	public Orders addOrder(int userId) {
+	public Orders addOrder(int userId) throws Exception
+	{
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
@@ -61,12 +63,13 @@ public class OrderService {
 			        "You are not allowed to access to other users carts");
 		}
 
-	    User user = userRepo.findById(userId).orElseThrow();
+	    User user = userRepo.findById(userId).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji User sa ID:"+userId));
 
 	    Cart cart = cartRepo.findByUser_id(userId);
 
 	    if (cart == null) {
-	        throw new RuntimeException("Korisnik nema korpu");
+	        throw new ResourceNotFoundException("Korpa je prazna");
 	    }
 
 	    List<Cart_item> cart_items =

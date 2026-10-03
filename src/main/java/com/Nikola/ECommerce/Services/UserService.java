@@ -2,6 +2,7 @@ package com.Nikola.ECommerce.Services;
 
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -33,9 +34,10 @@ public class UserService {
 	}
 	
 	
-	public User getUsers(int id)
+	public User getUsers(int id)throws  Exception
 	{
-		return repo.findById(id).orElseThrow();
+		return repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji user sa ID:"+id));
 	}
 	
 	
@@ -59,20 +61,26 @@ public class UserService {
 	}
 	
 	
-	public User updateUser(int id,  User user1 )
+	public User updateUser(int id,  User user1 ) throws Exception
 	{
-		User user = repo.findById(id).orElseThrow();
+		User user = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji user sa ID:"+id));
 		
-		if(user1.getIme() != null)
+		if(user1.getIme() != null){
 		user.setIme(user1.getIme());
-		if(user1.getPrezime() != null)
+		}
+		if(user1.getPrezime() != null){
 		user.setPrezime(user1.getPrezime());
-		if(user1.getEmail() != null)
+		}
+		if(user1.getEmail() != null){
 		user.setEmail(user1.getEmail());
-		if(user1.getPassword() != null)
+		}
+		if(user1.getPassword() != null){
 		user.setPassword(user1.getPassword());
-		if(user1.getRole() != null)
+		}
+		if(user1.getRole() != null){
 		user.setRole(user1.getRole());
+		}
 		
 		repo.save(user);
 		
@@ -81,9 +89,10 @@ public class UserService {
 	}
 	
 	
-	public User deleteUser( int id)
+	public User deleteUser( int id)throws  Exception
 	{
-		User user = repo.findById(id).orElseThrow();
+		User user = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji user sa ID:"+id));
 		
 		repo.deleteById(id);
 		

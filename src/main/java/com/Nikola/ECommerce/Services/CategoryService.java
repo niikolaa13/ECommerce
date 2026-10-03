@@ -2,6 +2,7 @@ package com.Nikola.ECommerce.Services;
 
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,7 @@ public class CategoryService {
 	
 	public CategoryService(CategoryRepository repo)
 	{
+
 		this.repo = repo;
 	}
 	
@@ -28,9 +30,8 @@ public class CategoryService {
 	}
 	
 	
-	public Category getUsers(int id)
-	{
-		return repo.findById(id).orElseThrow();
+	public Category getUsers(int id) throws ResourceNotFoundException {
+		return repo.findById(id).orElseThrow(()-> new ResourceNotFoundException("Ne postoji Kategorija sa ID:"+id));
 	}
 	
 	
@@ -45,9 +46,9 @@ public class CategoryService {
 	}
 	
 	
-	public Category updateUser(int id,  Category user1 )
-	{
-		Category category = repo.findById(id).orElseThrow();
+	public Category updateUser(int id,  Category user1 ) throws Exception {
+		Category category = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji Kategorija sa ID:"+id));
 		
 		category.setName(user1.getName());
 		
@@ -56,9 +57,10 @@ public class CategoryService {
 	}
 	
 	
-	public Category deleteUser( int id)
+	public Category deleteUser( int id) throws  Exception
 	{
-		Category category = repo.findById(id).orElseThrow();
+		Category category = repo.findById(id).orElseThrow(()->
+				new ResourceNotFoundException("Ne postoji Kategorija sa ID:"+id));
 		
 		repo.deleteById(id);
 		

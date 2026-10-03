@@ -20,7 +20,7 @@ public class OrderController {
 	
 	@PostMapping("/users/{userId}/orders")
 	@Transactional
-	public Orders addOrder(@PathVariable("userId") int userId) {
+	public Orders addOrder(@PathVariable("userId") int userId)throws  Exception {
 
 	    return service.addOrder(userId);
 	}

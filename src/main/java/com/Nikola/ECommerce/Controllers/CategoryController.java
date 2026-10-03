@@ -31,7 +31,7 @@ public class CategoryController {
 	}
 	
 	@GetMapping("/categories/{id}")
-	public Category getUsers(@PathVariable("id")int id)
+	public Category getUsers(@PathVariable("id")int id) throws  Exception
 	{
 		return service.getUsers(id);
 	}
@@ -43,14 +43,14 @@ public class CategoryController {
 	}
 	
 	@PutMapping("categories/{id}")
-	public Category updateUser(@PathVariable("id")int id, @RequestBody Category user1 )
+	public Category updateUser(@PathVariable("id")int id, @RequestBody Category user1 ) throws  Exception
 	{
 		return service.updateUser(id, user1);
 		
 	}
 	
 	@DeleteMapping("/categories/{id}")
-	public Category deleteUser(@PathVariable("id") int id)
+	public Category deleteUser(@PathVariable("id") int id) throws  Exception
 	{
 		return service.deleteUser(id);
 	}

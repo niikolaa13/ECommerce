@@ -2,7 +2,9 @@ package com.Nikola.ECommerce.Controllers;
 
 import java.util.List;
 
+import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,25 +29,22 @@ public class CartController {
 	CartService service;
 	
 	@GetMapping("/users/{userId}/cart")
-	public List<Cart_item> getCart(@PathVariable("userId")int id)
-	{	
-		return service.getCart(id);
+	public ResponseEntity<List<Cart_item>> getCart(@PathVariable("userId")int id) throws ResourceNotFoundException {
+		return ResponseEntity.ok(service.getCart(id));
 		
 	}
 	
 	@PostMapping("/users/{userId}/cart")
-	public Cart_item addInCart(@Valid @RequestBody CreateCart_ItemRequest cartItem,@PathVariable("userId")int id)
-	{
+	public ResponseEntity<Cart_item> addInCart(@Valid @RequestBody CreateCart_ItemRequest cartItem,@PathVariable("userId")int id) throws ResourceNotFoundException {
 		
-		return service.addInCart(cartItem, id);
+		return ResponseEntity.ok(service.addInCart(cartItem, id));
 		
 		
 		
 	}
 	
 	@PutMapping("/users/{userId}/cart/items/{itemId}")
-	public Cart_item azurirajKorpu(@PathVariable("userId") int userId,@PathVariable("itemId") int itemId,@RequestBody UpdateQuantity quantity)
-	{
+	public Cart_item azurirajKorpu(@PathVariable("userId") int userId,@PathVariable("itemId") int itemId,@RequestBody UpdateQuantity quantity) throws ResourceNotFoundException {
 		
 		return service.azurirajKorpu(userId, itemId, quantity);
 		
@@ -53,8 +52,7 @@ public class CartController {
 	}
 	
 	@DeleteMapping("/users/{userId}/cart/items/{itemId}")
-	public void obrisiItemUKorpi(@PathVariable("userId") int userId,@PathVariable("itemId") int itemId,@RequestBody UpdateQuantity quantity)
-	{
+	public void obrisiItemUKorpi(@PathVariable("userId") int userId,@PathVariable("itemId") int itemId,@RequestBody UpdateQuantity quantity) throws ResourceNotFoundException {
 		
 		service.obrisiItemUKorpi(userId, itemId, quantity);
 		
