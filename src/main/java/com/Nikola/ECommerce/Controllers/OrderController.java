@@ -3,6 +3,8 @@ package com.Nikola.ECommerce.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,14 +17,21 @@ import com.Nikola.ECommerce.model.Orders;
 @RestController
 public class OrderController {
 
-	@Autowired
-	OrderService service;
-	
+
+	private final OrderService service;
+
+	public OrderController(OrderService service)
+	{
+		this.service = service;
+	}
+
 	@PostMapping("/users/{userId}/orders")
 	@Transactional
-	public Orders addOrder(@PathVariable("userId") int userId)throws  Exception {
+	public ResponseEntity<Orders> addOrder(@PathVariable("userId") int userId)throws  Exception {
 
-	    return service.addOrder(userId);
+	    return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(service.addOrder(userId));
 	}
 	
 	@GetMapping("/orders")

@@ -4,15 +4,10 @@ import java.util.List;
 
 import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.Nikola.ECommerce.DTO.CreateProductRequest;
 import com.Nikola.ECommerce.Services.ProductService;
@@ -24,29 +19,50 @@ import jakarta.validation.Valid;
 public class ProductController {
 
 	
-	@Autowired
-	ProductService service;
+
+	private final ProductService service;
+
+	public ProductController(ProductService service)
+	{
+		this.service = service;
+	}
 	
 	
 	@GetMapping("/products")
-	public List<Product> getUsers()
+	public List<Product> getUsers(@RequestParam(required = false) String name,
+								  @RequestParam(required = false) Float minPrice,
+								  @RequestParam(required = false) Float maxPrice,
+								  @RequestParam(required = false) String sort,
+								  @RequestParam(required = false) String direction)
 	{
-		return service.getProducts();
+
+		return service.dynamicSearch(name,minPrice,maxPrice,sort,direction);
+
 	}
 	
 	@GetMapping("/products/{id}")
-	public ResponseEntity<Product> getUsers(@PathVariable("id")int id)
+	public Product getUsers(@PathVariable("id")int id)
 	{
 
 		return service.getProduct(id);
 	}
+
+
+	@GetMapping("/products/expensive")
+	public List<Product> getProductsExpensiveThan(@RequestParam("price") Float price)
+	{
+		return service.getProductsExpensiveThan(price);
+	}
+
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("products")
-	public Product addUser(@Valid @RequestBody CreateProductRequest userrequ) throws  Exception
+	public ResponseEntity<Product> addUser(@Valid @RequestBody CreateProductRequest userrequ) throws  Exception
 	{
 	
-		return service.addProduct(userrequ);
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(service.addProduct(userrequ));
 	}
 	
 	@PutMapping("products/{id}")

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,9 @@ public class CartController {
 	@PostMapping("/users/{userId}/cart")
 	public ResponseEntity<Cart_item> addInCart(@Valid @RequestBody CreateCart_ItemRequest cartItem,@PathVariable("userId")int id) throws ResourceNotFoundException {
 		
-		return ResponseEntity.ok(service.addInCart(cartItem, id));
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(service.addInCart(cartItem, id));
 		
 		
 		

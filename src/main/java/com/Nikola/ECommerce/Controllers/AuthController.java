@@ -1,5 +1,7 @@
 package com.Nikola.ECommerce.Controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +26,12 @@ public class AuthController {
 	}
 	
 	@PostMapping("/register")
-	public String register(@Valid @RequestBody CreateUserRequest userRequest) throws Exception
+	public ResponseEntity<String> register(@Valid @RequestBody CreateUserRequest userRequest) throws Exception
 	{
 		
-		return service.register(userRequest);
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(service.register(userRequest));
 		
 	
 		

@@ -3,6 +3,8 @@ package com.Nikola.ECommerce.Controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,8 +24,14 @@ public class UserController {
 
 
 	
-	@Autowired
-	UserService service;
+
+	private final UserService service;
+
+	public UserController(UserService service)
+	{
+		this.service = service;
+	}
+
 	
 	
 	@GetMapping("/users")
@@ -39,9 +47,11 @@ public class UserController {
 	}
 	
 	@PostMapping("users")
-	public User addUser(@Valid @RequestBody CreateUserRequest userrequ)
+	public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserRequest userrequ)
 	{
-		return service.addUser(userrequ);
+		return ResponseEntity
+				.status(HttpStatus.CREATED)
+				.body(service.addUser(userrequ));
 	}
 	
 	@PutMapping("users/{id}")

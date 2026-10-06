@@ -1,14 +1,15 @@
 package com.Nikola.ECommerce.Services;
 
+
 import java.util.List;
-import java.util.Optional;
+
 
 import com.Nikola.ECommerce.Exceptions.ProductNotFoundException;
 import com.Nikola.ECommerce.Exceptions.ResourceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Service;
 
 import com.Nikola.ECommerce.DTO.CreateProductRequest;
@@ -22,8 +23,9 @@ public class ProductService {
 	
 	private final ProductRepository repo;
 	private final CategoryRepository catrepo;
-	
-	
+
+
+
 	public ProductService(ProductRepository repo, CategoryRepository catrepo)
 	{
 		this.repo = repo;
@@ -38,16 +40,75 @@ public class ProductService {
 	}
 
 
-	public ResponseEntity<Product> getProduct(int id) {
+	public Product getProduct(int id) {
 
 
 		Product product = repo.findById(id).orElseThrow(()->
 				new ProductNotFoundException("proizvod sa ID:"+ id +" ne postoji"));
 
-		return ResponseEntity.ok(product);
+		return product;
 	}
-	
-	
+
+	public List<Product> getProductsByName(String name)
+	{
+		return repo.findAllByNameContainingIgnoreCase(name);
+	}
+
+	public List<Product> getProductsByPriceAndName(Float minPrice, Float maxPrice,String name) {
+
+
+
+		if(minPrice!= null && maxPrice != null)
+		{
+			return repo.findAllByNameContainingIgnoreCaseAndPriceBetween(name,minPrice,maxPrice);
+
+        }
+
+		if(minPrice != null)
+		{
+			return repo.findAllByNameContainingIgnoreCaseAndPriceGreaterThanEqual(name,minPrice);
+		}
+
+		return  repo.findAllByNameContainingIgnoreCaseAndPriceLessThanEqual(name,maxPrice);
+
+	}
+
+	public List<Product> getProductsBySortAndDirection(String sort,String direction)
+	{
+
+		Sort sort1;
+
+		if (direction == null || "asc".equalsIgnoreCase(direction)) {
+			sort1 = Sort.by(sort).ascending();
+		} else {
+			sort1 = Sort.by(sort).descending();
+		}
+
+		return repo.findAll(sort1);
+
+	}
+
+	public List<Product> getProductsBySortAndFilter(String name, Float minPrice, Float maxPrice, String sort, String direction) {
+
+
+		Sort sort1;
+
+		if (direction == null || "asc".equalsIgnoreCase(direction)) {
+			sort1 = Sort.by(sort).ascending();
+		} else {
+			sort1 = Sort.by(sort).descending();
+		}
+
+		return repo.findAllByNameContainingIgnoreCaseAndPriceBetween(name,minPrice,maxPrice,sort1);
+
+	}
+
+
+	public List<Product> getProductsExpensiveThan(Float price)
+	{
+		return repo.findProductsExpensiveThan(price);
+	}
+
 	public Product addProduct( CreateProductRequest userrequ) throws  Exception
 	{
 		Product product = new Product();
@@ -96,5 +157,59 @@ public class ProductService {
 		
 		return category;
 	}
-	
+
+
+	public List<Product> dynamicSearch(String name, Float minPrice,Float maxPrice, String sort, String direction)
+	{
+		Specification<Product> spec = ((root, query, criteriaBuilder) ->
+				criteriaBuilder.conjunction());
+
+		if(name != null)
+		{
+			spec = spec.and(((root, query, criteriaBuilder) ->
+					criteriaBuilder.like(
+							criteriaBuilder.lower(root.get("name")),
+							"%"+ name.toLowerCase() + "%"
+					)));
+		}
+
+		if(minPrice!= null)
+		{
+			spec = spec.and(((root, query, criteriaBuilder) ->
+					criteriaBuilder.greaterThanOrEqualTo(root.get("price"),
+							minPrice)));
+		}
+
+		if(maxPrice!= null)
+		{
+			spec = spec.and(((root, query, criteriaBuilder) ->
+					criteriaBuilder.lessThanOrEqualTo(root.get("price"),
+							maxPrice)));
+		}
+
+		Sort sort1 = null;
+
+		if(sort != null){
+
+			if("asc".equalsIgnoreCase(direction) || direction == null){
+
+				sort1 = Sort.by(sort).ascending();
+
+			}
+			if("desc".equalsIgnoreCase(direction)){
+
+				sort1 =Sort.by(sort).descending();
+
+			}
+		}
+
+		if(sort1 == null)
+		{
+			return repo.findAll(spec);
+		}
+
+		return repo.findAll(spec,sort1);
+
+	}
+
 }
